@@ -4,6 +4,7 @@ import re
 import json
 import csv
 import time
+import pandas as pd
 
 BASE_URL = "https://immovlan.be/en/real-estate"
 PARAMS   = "transactiontypes=for-sale,in-public-sale&propertytypes=house,apartment"
@@ -20,17 +21,21 @@ PROVINCES = [
     "antwerp",
     "east-flanders",
     "west-flanders",
-    "flemish-brabant",
+    "vlaams-brabant",
     "limburg",
     "liege",
     "hainaut",
     "namur",
     "luxembourg",
-    "walloon-brabant",
+    "brabant-wallon",
 ]
+
+
 
 session = requests.Session() #create a session
 session.headers.update(HEADERS) #update headers
+
+
 
 
 def build_url(province, page=1):
@@ -39,7 +44,7 @@ def build_url(province, page=1):
     
     
 def get_listing_urls(province, session):
-    urls = [] # change this to a set for faster search
+    urls = []
     
     for page in range(1, 51):
         url = build_url(province, page)
@@ -53,7 +58,22 @@ def get_listing_urls(province, session):
             if href:
                 urls.append(href)    
         time.sleep(0.2)              
-    return urls
+    return urls 
 
-test = get_listing_urls("brussels", session)
-print(test)
+
+all_urls = []
+
+# This loop moves to the next province automatically
+for province in PROVINCES:
+    print(f"Scraping links for: {province}...")
+
+    province_urls = get_listing_urls(province, session)
+    print(f"Collected {len(province_urls)} from {province}")
+    
+    all_urls.extend(province_urls)
+
+print(f"Done! Collected {len(all_urls)} links in total.")
+
+
+
+
