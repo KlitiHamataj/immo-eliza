@@ -4,7 +4,6 @@ import re
 import json
 import csv
 import time
-import pandas as pd
 
 BASE_URL = "https://immovlan.be/en/real-estate"
 PARAMS   = "transactiontypes=for-sale,in-public-sale&propertytypes=house,apartment"
@@ -61,9 +60,8 @@ def get_listing_urls(province, session):
     return urls 
 
 
+# For loop to move to next province automatically
 all_urls = []
-
-# This loop moves to the next province automatically
 for province in PROVINCES:
     print(f"Scraping links for: {province}...")
 
@@ -75,5 +73,11 @@ for province in PROVINCES:
 print(f"Done! Collected {len(all_urls)} links in total.")
 
 
+# save_to_txt funct
+def save_to_txt(urls):
+    with open("all_provinces_links", "w", encoding="utf-8") as file:
+        for url in urls:
+            file.write(f"{url} \n")
+    print(f"File {file} created with {len(urls)} entries.")
 
-
+save_to_txt(all_urls)
