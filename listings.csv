@@ -1,0 +1,21 @@
+﻿locality,property_type,subtype,price_eur,type_of_sale,num_rooms,living_area_m2,fully_equipped_kitchen,furnished,terrace,terrace_area_m2,garden,garden_area_m2,land_surface_m2,plot_surface_m2,num_facades,swimming_pool,state_of_building
+1050 Elsene,Apartment,Apartment,365000,for sale,2,99,,False,True,27,False,,,,2,False,To be renovated
+1050 Elsene,Apartment,Apartment,390000,for sale,3,125,,False,True,2,False,,,,2,False,To be renovated
+1180 Ukkel,Apartment,Penthouse,960000,for sale,3,255,,False,True,250,False,,,,3,,Excellent
+,Apartment,Apartment,,for sale,,,,,,,,,,,,,
+1050 Elsene,Apartment,Apartment,550000,for sale,3,149,,,True,,False,,,,,,Normal
+1040 Etterbeek,Apartment,Apartment,290000,for sale,1,100,,False,True,2,False,,,,2,,To be renovated
+1160 Oudergem,Apartment,Apartment,350000,for sale,3,100,,False,True,9,False,,,,4,,Normal
+1030 Schaarbeek,Apartment,Apartment,295000,for sale,2,96,True,False,True,2,False,,,,2,False,Normal
+1160 Oudergem,Apartment,Apartment,495000,for sale,2,106,,False,True,8,False,,,,2,,Normal
+1160 Oudergem,Apartment,Apartment,475000,for sale,2,106,,False,True,8,False,,,,2,,Normal
+1180 Ukkel,Apartment,Apartment,900000,for sale,3,230,,,True,40,False,,,,,,Excellent
+1050 Elsene,Apartment,Ground Floor,300000,for sale,1,60,True,False,True,15,True,50,,,2,,Excellent
+1180 Ukkel,House,Villa,1990000,for sale,5,306,,,True,75,True,400,543,,4,,Excellent
+1070 Anderlecht,Apartment,Apartment,189000,for sale,2,70,True,False,False,,False,,,,2,False,Normal
+1070 Anderlecht,Apartment,Apartment,249000,for sale,4,120,True,False,False,,False,,,,2,False,Normal
+,Apartment,Apartment,,for sale,,,,,,,,,,,,,
+1040 Etterbeek,House,Residence,599000,for sale,4,161,True,,True,15,False,,70,,3,False,Normal
+1020 Laken,Apartment,Apartment,225000,for sale,1,77,,False,True,,True,,,,2,,To renovate
+1040 Etterbeek,Apartment,Studio,190000,for sale,,42,True,False,False,,,,,,2,False,Normal
+1070 Anderlecht,Apartment,Apartment,229000,for sale,2,84,True,False,True,10,False,,,,2,False,Normal
