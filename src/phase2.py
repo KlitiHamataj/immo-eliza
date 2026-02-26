@@ -61,7 +61,6 @@ HOUSE_SUBTYPES = {"residence", "mixed building", "villa", "master house", "bunga
 
 
 #fetch page
-
 def fetch_page(url, session):
     try:
         response = session.get(url, timeout=15)
@@ -85,67 +84,80 @@ def get_property_type(subtype):
         return "House"
     else:
         return "Other"
-
-#parse the lisitng page
-def parse_listing(html, url):
-    soup = BeautifulSoup(html, "html.parser")
-    parts = url.split("/")
     
-    data = {col: None for col in COLUMNS}
     
-
-    data["type_of_sale"] = parts[6].replace("-", " ") if len(parts) > 6 else None
-
-        
-    #get price
+def extract_price(soup):
     price = soup.select_one(".detail__header_price_data")
     if price:
         raw = price.get_text(strip=True)
-        data["price_eur"] = re.sub(r"[^\d]", "", raw)
-        
-    #get property type
-    subtype_raw = parts[5] if len(parts) > 5 else None   
+        return re.sub(r"[^\d]", "", raw)
+    return None 
 
-    if subtype_raw:
-        subtype = subtype_raw.replace("-", " ").title()  
-        data["subtype"] = subtype
-        data["property_type"] = get_property_type(subtype)
-        
-    #get locality
+def extract_locality(soup):
     locality = soup.select_one(".city-line")
     if locality:
         raw_locality_data = locality.get_text(strip=True)
         indexed_locality = raw_locality_data
-        data["locality"] = indexed_locality
-        
-    #all other fields
-    wrapper = soup.select_one(".general-info-wrapper")
-    if wrapper:
-        for div in wrapper.select(".data-row-wrapper > div"):
-            h4 = div.select_one("h4")
-            p = div.select_one("p")
-            if h4 and p:
-                label = h4.get_text(strip=True).lower()
-                value = p.get_text(strip=True)
-                if label in FIELD_MAP:
-                    clean_val = value.lower().strip()
-                    
-                    if FIELD_MAP[label] == "fully_equipped_kitchen":
-                        data["fully_equipped_kitchen"] = True  # if the row exist it has a kitchen (without this it wasnt working because kitchens doeant have yes or no but explination)
-                    elif clean_val == "yes":
-                        data[FIELD_MAP[label]] = True
-                    elif clean_val == "no":
-                        data[FIELD_MAP[label]] = False
-                    elif any(char.isdigit() for char in clean_val):
-                        num_only = re.sub(r"[^\d]", "", clean_val)
-                        data[FIELD_MAP[label]] = int(num_only) if num_only else None
-                    else:
-                        data[FIELD_MAP[label]] = value
-                    
-    
-        
-    return data    
+        return indexed_locality
+    return None
 
+def extract_fields(soup):
+    fields = {}
+    wrapper = soup.select_one(".general-info-wrapper")
+    if not wrapper:
+        return fields
+    
+    for div in wrapper.select(".data-row-wrapper > div"):
+        h4 = div.select_one("h4")
+        p = div.select_one("p")
+        if h4 and p:
+            label = h4.get_text(strip=True).lower()
+            value = p.get_text(strip=True)
+            if label in FIELD_MAP:
+                clean_val = value.lower().strip()
+                col = FIELD_MAP[label]
+
+                if col == "fully_equipped_kitchen":
+                    fields[col] = True
+                elif clean_val == "yes":
+                    fields[col] = True
+                elif clean_val == "no":
+                    fields[col] = False
+                elif any(char.isdigit() for char in clean_val):
+                    num_only = re.sub(r"[^\d]", "", clean_val)
+                    fields[col] = int(num_only) if num_only else None
+                else:
+                    fields[col] = value
+
+    return fields    
+
+
+def parse_listing(html, url):
+    soup = BeautifulSoup(html, "html.parser")
+    parts = url.split("/")
+    
+    data = {col: None for col in COLUMNS} #None for empty values
+    
+    #get type of sale
+    data["type_of_sale"] = parts[6].replace("-", " ") if len(parts) > 6 else None
+    
+    #get property type
+    subtype_raw = parts[5] if len(parts) > 5 else None   
+    
+    #get price
+    data["price_eur"] = extract_price(soup)
+
+    #get locality
+    data["locality"] = extract_locality(soup)
+
+    #all other fields
+    data.update(extract_fields(soup))
+    
+    if subtype_raw:
+        subtype = subtype_raw.replace("-", " ").title()  
+        data["subtype"] = subtype
+        data["property_type"] = get_property_type(subtype)
+    return data    
 
 #just for testing. later implement pandas for rows and columns
 
@@ -156,7 +168,7 @@ def save_to_csv(data, file):
     file.flush
     
     
-all_urls = load_urls(INPUT_FILE)[:20] #delete [:10] to get all lisitings
+all_urls = load_urls(INPUT_FILE)[:50] #delete [:10] to get all lisitings
 print(f"Loaded {len(all_urls)} URLs from {INPUT_FILE}")
 
 with open(OUTPUT_FILE, "w", newline="", encoding="utf-8-sig") as f:

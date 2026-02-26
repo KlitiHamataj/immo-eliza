@@ -19,3 +19,33 @@
 1020 Laken,Apartment,Apartment,225000,for sale,1,77,,False,True,,True,,,,2,,To renovate
 1040 Etterbeek,Apartment,Studio,190000,for sale,,42,True,False,False,,,,,,2,False,Normal
 1070 Anderlecht,Apartment,Apartment,229000,for sale,2,84,True,False,True,10,False,,,,2,False,Normal
+1150 Sint-Pieters-Woluwe,House,Residence,895000,for sale,5,262,True,False,True,,True,,140,,2,False,Excellent
+1030 Schaarbeek,Apartment,Studio,175000,for sale,0,38,True,True,False,,False,,,,2,False,Normal
+1030 Schaarbeek,Apartment,Apartment,199000,for sale,1,57,True,False,True,2,,,,,2,False,Normal
+1030 Schaarbeek,House,Mixed Building,260000,for sale,4,203,True,,True,,,,110,,2,,To be renovated
+1000 Brussels,House,Villa,1990000,for sale,5,306,,,True,75,True,400,543,,4,,Excellent
+1050 Elsene,Apartment,Apartment,349000,for sale,2,88,True,False,False,,False,,,,2,False,To renovate
+1083 Ganshoren,Apartment,Apartment,380000,for sale,5,155,True,True,True,52,False,,,,,False,Excellent
+1081 Koekelberg,Apartment,Apartment,340000,for sale,4,135,True,False,True,,,,,,2,False,Normal
+1150 Sint-Pieters-Woluwe,House,Residence,550000,for sale,3,113,True,False,True,20,True,,90,,2,False,To renovate
+1082 Berchem-Sainte-Agathe,Apartment,Apartment,259000,for sale,2,95,True,False,True,6,False,,,,2,False,Normal
+1030 Schaarbeek,Apartment,Apartment,315000,for sale,3,115,True,False,True,4,False,,,,2,False,To renovate
+1030 Schaarbeek,Apartment,Apartment,315000,for sale,2,115,True,False,True,4,False,,,,2,False,To renovate
+,Apartment,Apartment,,for sale,,,,,,,,,,,,,
+1140 Evere,Apartment,Apartment,345000,for sale,2,87,True,False,True,11,True,,,,2,False,New
+1140 Evere,Apartment,Studio,200000,for sale,0,38,True,False,True,10,True,26,,,,False,New
+1140 Evere,Apartment,Apartment,290000,for sale,1,69,True,False,True,11,True,,,,2,False,New
+1040 Etterbeek,Apartment,Apartment,195000,for sale,,45,,,True,19,False,,,,2,,
+1030 Schaarbeek,Apartment,Apartment,315000,for sale,3,115,True,False,True,3,False,,,,3,,To renovate
+1030 Schaarbeek,Apartment,Apartment,325000,for sale,3,140,,False,True,2,False,,,,,,Normal
+1180 Ukkel,Apartment,Apartment,45000,for sale,1,67,True,,True,,True,100,,,2,False,Normal
+1080 Sint-Jans-Molenbeek,Apartment,Apartment,25000,for sale,1,60,True,,True,14,False,,,,2,False,Excellent
+1000 Brussels,Apartment,Apartment,175000,for sale,1,55,True,,True,11,False,,,,2,False,To be renovated
+1070 Anderlecht,House,Residence,595000,for sale,4,,True,,True,,True,,198,,2,,Excellent
+1060 Sint-Gillis,Apartment,Apartment,695000,for sale,,205,,,False,,False,,,,2,,Excellent
+1050 Elsene,Apartment,Apartment,690000,for sale,3,131,,,True,3,False,,,,2,,Normal
+1040 Etterbeek,Apartment,Apartment,395000,for sale,2,148,,,True,20,False,,,,,,To be renovated
+1180 Ukkel,House,Villa,1650000,for sale,5,370,True,False,True,,True,500,645,,3,False,Excellent
+1180 Ukkel,House,Villa,2400000,for sale,6,773,,False,True,160,True,2323,2323,,4,True,Normal
+1190 Vorst,Apartment,Apartment,215000,for sale,1,46,,False,True,10,True,125,,,,,New
+1020 Laken,Apartment,Duplex,350000,for sale,2,121,True,False,True,11,False,,,,2,False,New
