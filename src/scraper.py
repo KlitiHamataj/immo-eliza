@@ -1,8 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import time
-import random 
-from config import BASE_URL, PARAMS, HEADERS, PROVINCES, PRICE_RANGES
+import random
+from src.config import BASE_URL, PARAMS, HEADERS, PROVINCES, PRICE_RANGES
 
 
 session = requests.Session() #create a session
@@ -18,8 +18,8 @@ def build_url(province, page=1, min_price=None, max_price=None):
         price_param += f"&maxprice={max_price}"
     page_param = f"&page={page}" if page > 1 else ""
     return f"{BASE_URL}?{PARAMS}&provinces={province}{price_param}{page_param}&noindex=1"
-    
-    
+
+
 def get_listing_urls(province, session, min_price=None, max_price=None):
     urls = []
 

@@ -1,5 +1,5 @@
-from scraper import session, collect_all_urls, save_to_txt
-from parser import main as run_parser, save_to_pd_csv
+from src.scraper import session, collect_all_urls, save_to_txt
+from src.parser import main as run_parser, save_to_pd_csv
 
 
 if __name__ == "__main__":

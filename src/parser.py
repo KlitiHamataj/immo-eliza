@@ -5,7 +5,7 @@ import random
 import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import pandas as pd
-from config import INPUT_FILE, OUTPUT_FILE, HEADERS, COLUMNS, FIELD_MAP, APARTMENT_SUBTYPES, HOUSE_SUBTYPES, NUM_WORKERS
+from src.config import INPUT_FILE, OUTPUT_FILE, HEADERS, COLUMNS, FIELD_MAP, APARTMENT_SUBTYPES, HOUSE_SUBTYPES, NUM_WORKERS
 
 session = requests.Session()
 session.headers.update(HEADERS)
@@ -45,15 +45,15 @@ def get_property_type(subtype):
         return "House"
     else:
         return "Other"
-    
-    
+
+
 def extract_price(soup):
     price_tag = soup.select_one(".detail__header_price_data")
     if price_tag:
         raw_price     = price_tag.get_text(strip=True)
         clean_price =  re.sub(r"[^\d]", "", raw_price)
         return clean_price if clean_price else None
-    return None 
+    return None
 
 def extract_locality(soup):
     locality_tag = soup.select_one(".city-line")
@@ -68,7 +68,7 @@ def extract_fields(soup):
     wrapper_more_info = soup.select_one(".general-info-wrapper")
     if not wrapper_more_info:
         return fields_more_info
-    
+
     for div in wrapper_more_info.select(".data-row-wrapper > div"):
         h4 = div.select_one("h4")
         p  = div.select_one("p")
@@ -91,33 +91,33 @@ def extract_fields(soup):
                 else:
                     fields_more_info[col] = value
 
-    return fields_more_info    
+    return fields_more_info
 
 
 def parse_listing(html, url):
     soup = BeautifulSoup(html, "html.parser")
     split_url = url.split("/")
-    
+
     data_all_info = {col: None for col in COLUMNS} #None for empty values
-    
+
     #get type of sale
     data_all_info["type_of_sale"] = split_url[6].replace("-", " ") if len(split_url) > 6 else None
     #get price
     data_all_info["price_eur"] = extract_price(soup)
     #get locality
     data_all_info["locality"] = extract_locality(soup)
-    
-    
+
+
     data_all_info.update(extract_fields(soup))
-    
-    
+
+
     #get property type
-    subtype_raw = split_url[5] if len(split_url) > 5 else None   
+    subtype_raw = split_url[5] if len(split_url) > 5 else None
     if subtype_raw:
-        subtype = subtype_raw.replace("-", " ").title()  
+        subtype = subtype_raw.replace("-", " ").title()
         data_all_info["subtype"] = subtype
         data_all_info["property_type"] = get_property_type(subtype)
-    return data_all_info  
+    return data_all_info
 
 # ─────────────────────────────────────────────
 # Worker — one thread runs this per URL
@@ -127,13 +127,13 @@ def scrape_one(args):
     url, session, index, total = args
     print(f"  [{index}/{total}] Fetching: {url}")
     time.sleep(random.uniform(0.5, 1.0))
-    
+
     html = fetch_page(url, session)
     if not html:
         return None
     data = parse_listing(html, url)
     print(f"  [{index}/{total}] ✓ {data['locality']} | {data['price_eur']}€ | {data['property_type']}")
-    return data  
+    return data
 
 # ─────────────────────────────────────────────
 # Main
