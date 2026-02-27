@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+
 import time
 import random 
 from config import BASE_URL, PARAMS, HEADERS, PROVINCES, PRICE_RANGES
@@ -19,7 +20,7 @@ def build_url(province, page=1, min_price=None, max_price=None):
     page_param = f"&page={page}" if page > 1 else ""
     return f"{BASE_URL}?{PARAMS}&provinces={province}{price_param}{page_param}&noindex=1"
     
-    
+# Scrapes all listing URLs for one province and one price range
 def get_listing_urls(province, session, min_price=None, max_price=None):
     urls = []
 
@@ -41,7 +42,7 @@ def get_listing_urls(province, session, min_price=None, max_price=None):
 
     return urls
 
-
+# Collects listing URLs for all provinces and price ranges
 def collect_all_urls(session):
     all_urls = []
 
@@ -58,7 +59,7 @@ def collect_all_urls(session):
     print(f"Done! Collected {len(all_urls)} links in total.")
     return all_urls
 
-# save_to_txt funct
+# Saves all collected URLs into a text file
 def save_to_txt(urls):
     with open("all_provinces_links", "w", encoding="utf-8") as file:
         for url in urls:

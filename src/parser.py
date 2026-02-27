@@ -10,7 +10,7 @@ from config import INPUT_FILE, OUTPUT_FILE, HEADERS, COLUMNS, FIELD_MAP, APARTME
 session = requests.Session()
 session.headers.update(HEADERS)
 
-# read all urls
+# Loads and filters valid listing URLs from a text file
 def load_urls(filename):
     with open(filename, "r", encoding="utf-8") as f:
         urls = [
@@ -21,7 +21,7 @@ def load_urls(filename):
         ]
     return urls
 
-#fetch (used by each thread)
+# Fetches the HTML content of a single listing page
 def fetch_page(url, session):
     try:
         response = session.get(url, timeout=15)
@@ -37,6 +37,7 @@ def fetch_page(url, session):
 # Parse helpers
 # ─────────────────────────────────────────────
 
+# Determines the property category based on its subtype
 def get_property_type(subtype):
     subtype = subtype.lower().strip()
     if subtype in APARTMENT_SUBTYPES:
@@ -46,7 +47,7 @@ def get_property_type(subtype):
     else:
         return "Other"
     
-    
+# Extracts and cleans the property price from the HTML
 def extract_price(soup):
     price_tag = soup.select_one(".detail__header_price_data")
     if price_tag:
@@ -55,6 +56,7 @@ def extract_price(soup):
         return clean_price if clean_price else None
     return None 
 
+# Extracts the city or locality of the property
 def extract_locality(soup):
     locality_tag = soup.select_one(".city-line")
     if locality_tag:
@@ -63,6 +65,7 @@ def extract_locality(soup):
         return indexed_locality
     return None
 
+# Extracts additional property attributes from the info table
 def extract_fields(soup):
     fields_more_info  = {}
     wrapper_more_info = soup.select_one(".general-info-wrapper")
@@ -93,7 +96,7 @@ def extract_fields(soup):
 
     return fields_more_info    
 
-
+# Parses a single listing page into structured data
 def parse_listing(html, url):
     soup = BeautifulSoup(html, "html.parser")
     split_url = url.split("/")
@@ -123,6 +126,7 @@ def parse_listing(html, url):
 # Worker — one thread runs this per URL
 # ─────────────────────────────────────────────
 
+# Scrapes one listing (executed by each thread)
 def scrape_one(args):
     url, session, index, total = args
     print(f"  [{index}/{total}] Fetching: {url}")
@@ -139,6 +143,7 @@ def scrape_one(args):
 # Main
 # ─────────────────────────────────────────────
 
+# Coordinates multi-threaded scraping of all listings
 def main():
     all_urls = load_urls(INPUT_FILE)[:100]  # remove [:200] to scrape everything
     total    = len(all_urls)
