@@ -2,8 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 
 import time
-import random 
-from config import BASE_URL, PARAMS, HEADERS, PROVINCES, PRICE_RANGES
+import random
+from src.config import BASE_URL, PARAMS, HEADERS, PROVINCES, PRICE_RANGES
 
 
 session = requests.Session() #create a session
