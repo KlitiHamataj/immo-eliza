@@ -1,52 +1,15 @@
 import requests
 from bs4 import BeautifulSoup
 import time
-
-BASE_URL = "https://immovlan.be/en/real-estate"
-PARAMS   = "transactiontypes=for-sale,in-public-sale&propertytypes=house,apartment"
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/122.0.0.0 Safari/537.36"
-    )
-}
-
-PROVINCES = [
-    "brussels",
-    "antwerp",
-    "east-flanders",
-    "west-flanders",
-    "vlaams-brabant",
-    "limburg",
-    "liege",
-    "hainaut",
-    "namur",
-    "luxembourg",
-    "brabant-wallon",
-]
-
+import random 
+from config import BASE_URL, PARAMS, HEADERS, PROVINCES, PRICE_RANGES
 
 
 session = requests.Session() #create a session
 session.headers.update(HEADERS) #update headers
 
 
-PRICE_RANGES = [
-    (0, 100000),
-    (100000, 200000),
-    (200000, 300000),
-    (300000, 400000),
-    (400000, 500000),
-    (500000, 750000),
-    (750000, 9999999),
-]
-
-
-# Instead of one big search per province
-# Split into price ranges that each return < 1000 results
-
-
+# Constructs and returns the precise target URL by injecting province, page, and price parameters.
 def build_url(province, page=1, min_price=None, max_price=None):
     price_param = ""
     if min_price is not None:
@@ -74,7 +37,7 @@ def get_listing_urls(province, session, min_price=None, max_price=None):
             if href and "/projectdetail/" not in href:
                 urls.append(href)
 
-        time.sleep(0.2)
+        time.sleep(random.uniform(0.1, 0.3)) # changed to 0.3 because 0.2 got blocked
 
     return urls
 
@@ -95,8 +58,6 @@ def collect_all_urls(session):
     print(f"Done! Collected {len(all_urls)} links in total.")
     return all_urls
 
-all_urls = collect_all_urls(session) #call the function
-
 # save_to_txt funct
 def save_to_txt(urls):
     with open("all_provinces_links", "w", encoding="utf-8") as file:
@@ -104,4 +65,3 @@ def save_to_txt(urls):
             file.write(f"{url} \n")
     print(f"File {file} created with {len(urls)} entries.")
 
-save_to_txt(all_urls)
