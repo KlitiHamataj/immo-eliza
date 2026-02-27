@@ -180,13 +180,19 @@ Results are saved to `data/processed/listings.csv`. Below is the full schema wit
 | 6000 Charleroi | Apartment | Apartment | 104000 | for sale | 2.0 | 85.0 | None | 1.0 | 1.0 | None | 0.0 | None | None | None | None | Normal |
 
 ---
+## Contributors: 
+[Kliti Hamataj](https://github.com/KlitiHamataj/)
+[Jonbes Ahmadzai](https://github.com/JonbeshAhmadzai) 
+[Mohamed Toukane](https://github.com/modev-git)
+[Fernand Gatera](https://github.com/ndinhoo)
 
+---
 ## ⚠️ Disclaimer
 
 This scraper is intended for **personal research and analysis** only. Always respect the website's `robots.txt` and Terms of Service. Add appropriate delays between requests to avoid overloading the server.
 
----
 
+---
 ## 📄 License
 
 MIT License — see [LICENSE](LICENSE) for details.
