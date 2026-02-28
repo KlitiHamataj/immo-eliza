@@ -60,18 +60,19 @@ https://immovlan.be/en/real-estate?transactiontypes=for-sale,in-public-sale&prop
 ## 📁 Project Structure
 
 ```
-immoe-liza/
-│
-├── src/
-│   ├── config.py
-│   ├── scraper.py
-│   └── parser.py
-│
-├── config.py
-├── main.py
-├── requirements.txt
-├── listings.csv
-└── README.md
+├── 📁 data
+│   ├── 📁 processed
+│   │   └── 📄 listings.csv
+│   └── 📁 raw
+│       └── 📄 all_provinces_links.csv
+├── 📁 src
+│   ├── 🐍 config.py
+│   ├── 🐍 parser.py
+│   └── 🐍 scraper.py
+├── ⚙️ .gitignore
+├── 📝 README.md
+├── 🐍 main.py
+└── 📄 requirements.txt
 ```
 
 ---
