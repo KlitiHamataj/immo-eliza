@@ -1,8 +1,16 @@
-
-
 BASE_URL = "https://immovlan.be/en/real-estate"
 
 PARAMS   = "transactiontypes=for-sale,in-public-sale&propertytypes=house,apartment"
+
+APARTMENT_SUBTYPES = {"apartment", "studio", "penthouse", "duplex", "ground floor", "triplex", "loft"}
+HOUSE_SUBTYPES     = {"residence", "mixed building", "villa", "master house", "bungalow", "chalet", "mansion", "house", "cottage"}
+
+NUM_WORKERS_PARSER = 20 # workers for threadpoolexec
+NUM_WORKERS_SCRAPER = 10
+
+# CONSTANT variables in phase2.py
+INPUT_FILE  = "data/raw/all_provinces_links.csv"
+OUTPUT_FILE = "data/processed/listings.csv"
 
 HEADERS = {
     "User-Agent": (
@@ -41,10 +49,6 @@ PRICE_RANGES = [
     (750000, 9999999),
 ]
 
-# CONSTANT variables in phase2.py
-INPUT_FILE = "all_provinces_links"
-OUTPUT_FILE = "listings.csv"
-
 COLUMNS = [
     "locality",
     "property_type",
@@ -79,8 +83,3 @@ FIELD_MAP = {
     "swimming pool":             "swimming_pool",
     "state of the property":     "state_of_building",
 }
-
-APARTMENT_SUBTYPES = {"apartment", "studio", "penthouse", "duplex", "ground floor", "triplex", "loft"}
-HOUSE_SUBTYPES = {"residence", "mixed building", "villa", "master house", "bungalow", "chalet", "mansion", "house"}
-
-NUM_WORKERS = 20 # workers for threadpoolexec
