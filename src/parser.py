@@ -5,7 +5,7 @@ import random
 import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import pandas as pd
-from src.config import INPUT_FILE, OUTPUT_FILE, HEADERS, COLUMNS, FIELD_MAP, APARTMENT_SUBTYPES, HOUSE_SUBTYPES, NUM_WORKERS
+from src.config import INPUT_FILE, NUM_WORKERS_PARSER, OUTPUT_FILE, HEADERS, COLUMNS, FIELD_MAP, APARTMENT_SUBTYPES, HOUSE_SUBTYPES
 
 session = requests.Session()
 session.headers.update(HEADERS)
@@ -46,7 +46,7 @@ def get_property_type(subtype):
         return "House"
     else:
         return "Other"
-    
+
 # Extracts and cleans the property price from the HTML
 def extract_price(soup):
     price_tag = soup.select_one(".detail__header_price_data")
@@ -67,32 +67,43 @@ def extract_locality(soup):
 
 # Extracts additional property attributes from the info table
 def extract_fields(soup):
-    fields_more_info  = {}
+    """
+    Extracts fields based on FIELD_MAP.
+    Returns a dictionary of cleaned field values.
+    """
+    fields_more_info = {}
+
     wrapper_more_info = soup.select_one(".general-info-wrapper")
     if not wrapper_more_info:
         return fields_more_info
 
     for div in wrapper_more_info.select(".data-row-wrapper > div"):
         h4 = div.select_one("h4")
-        p  = div.select_one("p")
-        if h4 and p:
-            key = h4.get_text(strip=True).lower()
-            value = p.get_text(strip=True)
-            if key in FIELD_MAP:
-                clean_value = value.lower().strip()
-                col        = FIELD_MAP[key]
+        p = div.select_one("p")
+        if not (h4 and p):
+            continue
 
-                if col == "fully_equipped_kitchen":
-                    fields_more_info[col] = 1
-                elif clean_value == "yes":
-                    fields_more_info[col] = 1
-                elif clean_value == "no":
-                    fields_more_info[col] = 0
-                elif any(char.isdigit() for char in clean_value):
-                    num_only = re.sub(r"[^\d]", "", clean_value)
-                    fields_more_info[col] = int(num_only) if num_only else None
-                else:
-                    fields_more_info[col] = value
+        key = h4.get_text(strip=True).lower()
+        value = p.get_text(strip=True)
+
+        if key not in FIELD_MAP:
+            continue
+
+        col = FIELD_MAP[key]
+        clean_value = value.lower().strip()
+
+        # Determine field value based on type/content
+        if col == "fully_equipped_kitchen":
+            fields_more_info[col] = 1
+        elif clean_value == "yes":
+            fields_more_info[col] = 1
+        elif clean_value == "no":
+            fields_more_info[col] = 0
+        elif any(char.isdigit() for char in clean_value):
+            num_only = re.sub(r"[^\d]", "", clean_value)
+            fields_more_info[col] = int(num_only) if num_only else None
+        else:
+            fields_more_info[col] = value
 
     return fields_more_info
 
@@ -129,7 +140,7 @@ def parse_listing(html, url):
 # Scrapes one listing (executed by each thread)
 def scrape_one(args):
     url, session, index, total = args
-    print(f"  [{index}/{total}] Fetching: {url}")
+    print(f"  [{index}/{total}] Scraping: {url}")
     time.sleep(random.uniform(0.5, 1.0))
 
     html = fetch_page(url, session)
@@ -144,25 +155,25 @@ def scrape_one(args):
 # ─────────────────────────────────────────────
 
 # Coordinates multi-threaded scraping of all listings
-def main():
-    all_urls = load_urls(INPUT_FILE)[:100]  # remove [:200] to scrape everything
+def scrape_all_lisitng():
+    all_urls = load_urls(INPUT_FILE)  # remove [:200] to scrape everything
     total    = len(all_urls)
-    print(f"Loaded {total} URLs — scraping with 10 threads")
+    print(f"Loaded {total} URLs — scraping with 20 threads")
 
     # Each thread gets its own session
-    sessions = [requests.Session() for _ in range(NUM_WORKERS)]
+    sessions = [requests.Session() for _ in range(NUM_WORKERS_PARSER)]
     for s in sessions:
         s.headers.update(HEADERS)
 
     jobs = []
     for i, url in enumerate(all_urls):
-        session = sessions[i % NUM_WORKERS]   # pick a session
+        session = sessions[i % NUM_WORKERS_PARSER]   # pick a session
         index   = i + 1              # display number
         jobs.append((url, session, index, total))
 
 
     all_data = []
-    with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
+    with ThreadPoolExecutor(max_workers=NUM_WORKERS_PARSER) as executor:
         futures = [executor.submit(scrape_one, job) for job in jobs]
         for future in as_completed(futures):
             result = future.result()
@@ -176,5 +187,3 @@ def save_to_pd_csv(all_data):
     df = pd.DataFrame(all_data, columns=COLUMNS)
     df.to_csv(OUTPUT_FILE, index=False, encoding="utf-8-sig", na_rep="None")
     print(f"\nDone! {len(df)} listings saved to {OUTPUT_FILE}")
-
-
